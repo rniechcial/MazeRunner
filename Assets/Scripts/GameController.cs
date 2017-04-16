@@ -12,6 +12,7 @@ public class GameController : MonoBehaviour {
 
     private Player playerInstance;
 
+
     // Use this for initialization
     public void Start () {
         StartCoroutine(BeginGame());

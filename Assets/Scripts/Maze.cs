@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,10 +16,15 @@ public class Maze : MonoBehaviour {
     public MazePassage passagePrefab;
     public MazeWall[] wallPrefabs;
 
+    public Door doorPrefab;
+
+    private Door doorInstance;
+
+    private bool doorInitialized = false;
+
     // Use this for initialization
     void Start () {
-		
-	}
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -55,7 +61,14 @@ public class Maze : MonoBehaviour {
         }
         MazeDirection direction = currentCell.RandomUninitializedDirection;
         IntVector2 coordinates = currentCell.coordinates + direction.ToIntVector2();
-        if (ContainsCoordinates(coordinates) && GetCell(coordinates) == null)
+        if (!doorInitialized && isEdge(currentCell.coordinates, direction))
+        {
+            Debug.Log(direction);
+            Debug.Log(currentCell.coordinates.ToString());
+            CreateDoor(currentCell, null, direction);
+            doorInitialized = true;
+        }
+        else if (ContainsCoordinates(coordinates) && GetCell(coordinates) == null)
         {
             MazeCell neighbor = GetCell(coordinates);
             if (neighbor == null)
@@ -71,8 +84,17 @@ public class Maze : MonoBehaviour {
         }
         else
         {
-            CreateWall(currentCell, null, direction);
+            //TODO coordinates should be equals size value or 0
+                CreateWall(currentCell, null, direction);
         }
+    }
+
+    private bool isEdge(IntVector2 coordinates, MazeDirection direction)
+    {
+        return ((coordinates.x == 0 && direction.Equals(MazeDirection.West)) ||
+            (coordinates.z == 0 && direction.Equals(MazeDirection.South)) ||
+            (coordinates.x == size.x && direction.Equals(MazeDirection.East)) ||
+            (coordinates.z == size.z && direction.Equals(MazeDirection.North)));
     }
 
     private MazeCell CreateCell(IntVector2 coordinates) {
@@ -87,7 +109,7 @@ public class Maze : MonoBehaviour {
 
     public IntVector2 RandomCoordinates {
         get {
-            return new IntVector2(Random.Range(0, size.x), Random.Range(0, size.z));
+            return new IntVector2(UnityEngine.Random.Range(0, size.x), UnityEngine.Random.Range(0, size.z));
         }
     }
 
@@ -105,11 +127,25 @@ public class Maze : MonoBehaviour {
 
     private void CreateWall(MazeCell cell, MazeCell otherCell, MazeDirection direction)
     {
-        MazeWall wall = Instantiate(wallPrefabs[Random.Range(0, wallPrefabs.Length)]) as MazeWall;
+        MazeWall wall = Instantiate(wallPrefabs[UnityEngine.Random.Range(0, wallPrefabs.Length)]) as MazeWall;
         wall.Initialize(cell, otherCell, direction);
         if (otherCell != null)
         {
-            wall = Instantiate(wallPrefabs[Random.Range(0, wallPrefabs.Length)]) as MazeWall;
+            wall = Instantiate(wallPrefabs[UnityEngine.Random.Range(0, wallPrefabs.Length)]) as MazeWall;
+            wall.Initialize(otherCell, cell, direction.GetOpposite());
+        }
+    }
+
+    private void CreateDoor(MazeCell cell, MazeCell otherCell, MazeDirection direction)
+    {
+        Door wall = Instantiate(doorPrefab) as Door;
+        wall.Initialize(cell, otherCell, direction);
+        Debug.Log(direction);
+        Debug.Log(cell.coordinates.ToString());
+        Debug.Log(GetCell(cell.coordinates));
+        if (otherCell != null)
+        {
+            wall = Instantiate(doorPrefab) as Door;
             wall.Initialize(otherCell, cell, direction.GetOpposite());
         }
     }
