@@ -12,6 +12,10 @@ public class GameController : MonoBehaviour {
 
     private Player playerInstance;
 
+    public Key keyPrefab;
+
+    private Key keyInstance;
+
 
     // Use this for initialization
     public void Start () {
@@ -21,7 +25,7 @@ public class GameController : MonoBehaviour {
 	
 	// Update is called once per frame
 	public void Update () {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.R))
         {
             RestartGame();
         }
@@ -35,6 +39,8 @@ public class GameController : MonoBehaviour {
         yield return StartCoroutine(mazeInstance.Generate());
         playerInstance = Instantiate(playerPrefab) as Player;
         playerInstance.SetLocation(mazeInstance.GetCell(mazeInstance.RandomCoordinates));
+        keyInstance = Instantiate(keyPrefab, mazeInstance.GetCell(mazeInstance.RandomCoordinates).transform) as Key;
+        //keyInstance.set
         //Camera.main.rect = new Rect(0f, 0f, 0.5f, 0.5f);
     }
 

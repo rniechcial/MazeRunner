@@ -63,8 +63,8 @@ public class Maze : MonoBehaviour {
         IntVector2 coordinates = currentCell.coordinates + direction.ToIntVector2();
         if (!doorInitialized && isEdge(currentCell.coordinates, direction))
         {
-            Debug.Log(direction);
-            Debug.Log(currentCell.coordinates.ToString());
+            //Debug.Log(direction);
+            //Debug.Log(currentCell.coordinates.ToString());
             CreateDoor(currentCell, null, direction);
             doorInitialized = true;
         }
@@ -84,7 +84,6 @@ public class Maze : MonoBehaviour {
         }
         else
         {
-            //TODO coordinates should be equals size value or 0
                 CreateWall(currentCell, null, direction);
         }
     }
@@ -140,9 +139,9 @@ public class Maze : MonoBehaviour {
     {
         Door wall = Instantiate(doorPrefab) as Door;
         wall.Initialize(cell, otherCell, direction);
-        Debug.Log(direction);
-        Debug.Log(cell.coordinates.ToString());
-        Debug.Log(GetCell(cell.coordinates));
+        //Debug.Log(direction);
+        //Debug.Log(cell.coordinates.ToString());
+        //Debug.Log(GetCell(cell.coordinates));
         if (otherCell != null)
         {
             wall = Instantiate(doorPrefab) as Door;
