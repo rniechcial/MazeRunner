@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,6 +16,11 @@ public class GameController : MonoBehaviour {
     public Key keyPrefab;
 
     private Key keyInstance;
+    
+    public ScoreTimer timerPrefab;
+
+    private ScoreTimer timerInstance;
+    
 
 
     // Use this for initialization
@@ -29,8 +35,13 @@ public class GameController : MonoBehaviour {
         {
             RestartGame();
         }
-
+        else if (Input.GetKeyDown(KeyCode.Return))
+        {
+            StartCoroutine(timerInstance.StartTimer());
+        }
     }
+
+   
 
     private IEnumerator BeginGame()
     {
@@ -40,6 +51,7 @@ public class GameController : MonoBehaviour {
         playerInstance = Instantiate(playerPrefab) as Player;
         playerInstance.SetLocation(mazeInstance.GetCell(mazeInstance.RandomCoordinates));
         keyInstance = Instantiate(keyPrefab, mazeInstance.GetCell(mazeInstance.RandomCoordinates).transform) as Key;
+        timerInstance = Instantiate(timerPrefab);
         //keyInstance.set
         //Camera.main.rect = new Rect(0f, 0f, 0.5f, 0.5f);
     }

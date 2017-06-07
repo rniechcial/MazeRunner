@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class Player: MonoBehaviour
 {
@@ -14,7 +15,9 @@ public class Player: MonoBehaviour
 
     public void PickUpItem(TGK.Communication.Messages.KeyAction keyAction)
     {
-        Debug.Log("Player has "+ keyAction.key.keyName);
+        //Debug.Log("Player has "+ keyAction.key.keyName);
+        var slot = GameObject.Find("Slot1").GetComponent<Image>();
+        slot.material = Resources.Load("MazeMaterial", typeof(Material)) as Material;
     }
 
     private void Move(MazeDirection direction) {
